@@ -1,0 +1,4 @@
+name: TimixoEssentials
+version: '1.0-SNAPSHOT'
+main: me.timixo.timixoEssentials.TimixoEssentials
+api-version: '1.21'
