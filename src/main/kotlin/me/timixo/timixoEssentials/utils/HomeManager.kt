@@ -43,4 +43,20 @@ object HomeManager {
         val homesPDC = playerPDC.get(HOMES_KEY, PersistentDataType.TAG_CONTAINER) ?: return 0
         return homesPDC.keys.size
     }
+
+    fun removeHome(player: Player, name: String): Boolean {
+        val playerPDC = player.persistentDataContainer
+        val homesPDC = playerPDC.get(
+            HOMES_KEY,
+            PersistentDataType.TAG_CONTAINER,
+        )
+        if (homesPDC == null) return false
+        val key = NamespacedKey(TimixoEssentials.instance, name)
+        if (!homesPDC.has(key)) {
+            return false
+        }
+        homesPDC.remove(key)
+        playerPDC.set(HOMES_KEY, PersistentDataType.TAG_CONTAINER, homesPDC)
+        return true
+    }
 }

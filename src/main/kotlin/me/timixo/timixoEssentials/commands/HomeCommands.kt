@@ -5,8 +5,10 @@ import com.mojang.brigadier.tree.LiteralCommandNode
 import io.papermc.paper.command.brigadier.CommandSourceStack
 import io.papermc.paper.command.brigadier.Commands
 import me.timixo.timixoEssentials.utils.HomeManager
-import me.timixo.timixoEssentials.utils.TeleportationManager.startTeleport
-import org.bukkit.ChatColor
+import me.timixo.timixoEssentials.utils.TeleportationManager
+import net.kyori.adventure.text.Component
+import net.kyori.adventure.text.format.NamedTextColor
+import net.kyori.adventure.text.format.TextDecoration
 import org.bukkit.entity.Player
 
 object HomeCommands {
@@ -14,11 +16,15 @@ object HomeCommands {
         .then(Commands.argument("name", StringArgumentType.word())
             .executes { ctx ->
                 val player = ctx.source.executor!! as Player
-                if (HomeManager.countHomes(player) >= 3)
-                    player.sendMessage("${ChatColor.DARK_RED}YOU CAN'T SET MORE HOMES")
+                if (HomeManager.countHomes(player) >= 3) {
+                    player.sendMessage(Component.text("You cannot set more homes", NamedTextColor.DARK_RED)
+                        .decoration(TextDecoration.BOLD, true))
+                    return@executes 1
+                }
                 val name = StringArgumentType.getString(ctx, "name")
                 HomeManager.setHome(player, name, ctx.source.location)
-                    player.sendMessage("${ChatColor.DARK_GREEN}Home named: $name was successfully set.")
+                    player.sendMessage(Component.text("Home named: $name was successfully set", NamedTextColor.GREEN)
+                        .decoration(TextDecoration.BOLD, false))
                 return@executes 1
             }
         )
@@ -35,13 +41,38 @@ object HomeCommands {
                 val name = StringArgumentType.getString(ctx, "name")
                 val entity = ctx.source.executor!! as Player
                 val location = HomeManager.getHome(ctx.source.executor!! as Player, name)
-                if (location == null) ctx.source.executor?.sendMessage("There is no home named: $name")
-                else {
-                        ctx.source.executor?.sendMessage("Teleporting to home named: $name: ")
-                        ctx.source.executor?.sendMessage("Don't move or take damage")
-                    startTeleport(entity, location, 5)
-                }
+                if (location == null) {
+                    ctx.source.executor?.sendMessage(Component.text("You don't have home named: $name", NamedTextColor.DARK_RED)
+                        .decoration(TextDecoration.BOLD, false))
                     return@executes 1
+                }
+
+                TeleportationManager.startTeleport(entity, location, 5)
+                ctx.source.executor?.sendMessage(Component.text("Teleporting, Don't move", NamedTextColor.GREEN)
+                        .decoration(TextDecoration.BOLD, true))
+                entity.sendActionBar {Component.text("Teleporting", NamedTextColor.GREEN)}
+                return@executes 1
+            }
+        )
+        .build()
+
+    fun delHomeCommand(): LiteralCommandNode<CommandSourceStack> = Commands.literal("delhome")
+        .then(Commands.argument("name", StringArgumentType.word())
+            .suggests { ctx, builder ->
+                HomeManager.listHomes(ctx.source.executor!! as Player)
+                    .forEach { builder.suggest(it.key) }
+                return@suggests builder.buildFuture()
+            }
+            .executes { ctx ->
+                val name = StringArgumentType.getString(ctx, "name")
+                val player = ctx.source.executor!! as Player
+                if (HomeManager.removeHome(player, name)) {
+                player.sendMessage(Component.text("Home named $name has been deleted", NamedTextColor.GREEN))
+                }
+
+
+
+                return@executes 1
             }
         )
         .build()

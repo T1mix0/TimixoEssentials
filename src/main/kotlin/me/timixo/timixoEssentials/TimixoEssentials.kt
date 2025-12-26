@@ -2,6 +2,7 @@ package me.timixo.timixoEssentials
 
 import io.papermc.paper.plugin.lifecycle.event.types.LifecycleEvents
 import me.timixo.timixoEssentials.commands.HomeCommands
+import me.timixo.timixoEssentials.events.TeleportationDelayListener
 import org.bukkit.plugin.java.JavaPlugin
 
 class TimixoEssentials : JavaPlugin() {
@@ -18,8 +19,10 @@ class TimixoEssentials : JavaPlugin() {
             val registrar = commands.registrar()
             registrar.register(HomeCommands.setHomeCommand())
             registrar.register(HomeCommands.homeCommand())
+            registrar.register(HomeCommands.delHomeCommand())
         }
 
+        server.pluginManager.registerEvents(TeleportationDelayListener(), this)
     }
 
     override fun onDisable() {
