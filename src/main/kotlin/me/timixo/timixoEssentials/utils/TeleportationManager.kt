@@ -19,10 +19,9 @@ import org.bukkit.scheduler.BukkitTask
 import org.checkerframework.checker.units.qual.Length
 
 object TeleportationManager : Listener {
-
     val activeTeleports = mutableMapOf<Player, TeleportData>()
 
-    public fun startTeleport(player: Entity, target: Location, seconds: Long) {
+    fun startTeleport(player: Entity, target: Location, seconds: Long) {
 
         val scheduler = Bukkit.getScheduler()
 
@@ -38,7 +37,4 @@ object TeleportationManager : Listener {
         )
         activeTeleports[player as Player] = data
     }
-
-
-
 }

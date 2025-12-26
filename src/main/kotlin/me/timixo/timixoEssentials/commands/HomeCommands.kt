@@ -1,20 +1,16 @@
 package me.timixo.timixoEssentials.commands
 
-import com.mojang.brigadier.Message
 import com.mojang.brigadier.arguments.StringArgumentType
-import com.mojang.brigadier.builder.LiteralArgumentBuilder
 import com.mojang.brigadier.tree.LiteralCommandNode
 import io.papermc.paper.command.brigadier.CommandSourceStack
 import io.papermc.paper.command.brigadier.Commands
 import me.timixo.timixoEssentials.utils.HomeManager
 import me.timixo.timixoEssentials.utils.TeleportationManager.startTeleport
 import org.bukkit.ChatColor
-import org.bukkit.command.Command
 import org.bukkit.entity.Player
-import org.bukkit.event.player.PlayerTeleportEvent
 
 object HomeCommands {
-    public fun setHomeCommand(): LiteralCommandNode<CommandSourceStack> = Commands.literal("sethome")
+    fun setHomeCommand(): LiteralCommandNode<CommandSourceStack> = Commands.literal("sethome")
         .then(Commands.argument("name", StringArgumentType.word())
             .executes { ctx ->
                 val player = ctx.source.executor!! as Player
@@ -28,7 +24,7 @@ object HomeCommands {
         )
         .build()
 
-    public fun homeCommand(): LiteralCommandNode<CommandSourceStack> = Commands.literal("home")
+    fun homeCommand(): LiteralCommandNode<CommandSourceStack> = Commands.literal("home")
         .then(Commands.argument("name", StringArgumentType.word())
             .suggests { ctx, builder ->
                 HomeManager.listHomes(ctx.source.executor!! as Player)
@@ -48,17 +44,5 @@ object HomeCommands {
                     return@executes 1
             }
         )
-
         .build()
-
-
-
-
-
-
-
-
-
-
-
 }
