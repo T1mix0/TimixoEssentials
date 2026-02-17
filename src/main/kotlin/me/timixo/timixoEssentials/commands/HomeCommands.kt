@@ -48,9 +48,6 @@ object HomeCommands {
                 }
 
                 TeleportationManager.startTeleport(entity, location, 5)
-                ctx.source.executor?.sendMessage(Component.text("Teleporting, Don't move", NamedTextColor.GREEN)
-                        .decoration(TextDecoration.BOLD, true))
-                entity.sendActionBar {Component.text("Teleporting", NamedTextColor.GREEN)}
                 return@executes 1
             }
         )
