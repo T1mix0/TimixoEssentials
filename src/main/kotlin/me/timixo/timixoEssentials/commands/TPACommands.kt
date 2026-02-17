@@ -50,7 +50,6 @@ object TPACommands {
         }
         .build()
 
-
     fun teleportCancel(): LiteralCommandNode<CommandSourceStack> = Commands.literal("tpcancel")
         .then(
             Commands.argument("target", ArgumentTypes.player())

@@ -2,7 +2,6 @@ package me.timixo.timixoEssentials.utils
 
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.format.NamedTextColor
-import net.kyori.option.OptionSchema
 import org.bukkit.entity.Player
 
 object TPAManager {
@@ -16,6 +15,7 @@ object TPAManager {
         target.sendMessage(Component.text("/tpdecline to decline", NamedTextColor.RED))
 
     }
+
     fun teleportAccept(player: Player){
         var location = player.location;
         var source = pending[player]?.fromPlayer
@@ -28,6 +28,7 @@ object TPAManager {
         TeleportationManager.startTeleport(source, location, 5 )
 
     }
+
     fun teleportDeny(player: Player){
     var source = pending[player]?.fromPlayer
         if (source == null) {
@@ -37,6 +38,7 @@ object TPAManager {
 
 
     }
+
     fun teleportCancel(player: Player, target: Player) {
         val chujwie = pending[target]?.fromPlayer
         if (chujwie == player) {
